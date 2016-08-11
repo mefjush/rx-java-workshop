@@ -2,8 +2,12 @@ package com.doggybites;
 
 import org.junit.Test;
 import rx.Observable;
+import rx.Subscription;
 
+import java.time.LocalDateTime;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -25,13 +29,6 @@ public class Step_05_Twitter {
         Tweet first = tweets.take(1).toBlocking().first();
 
         assertNotNull(first);
-    }
-
-    @Test(timeout = 6000)
-    public void prints_all_the_tweets_for_5_seconds() {
-        Observable<Tweet> tweets = asyncTwitterService.getTweets();
-
-        //TODO
     }
 
     @Test(timeout = 1000)
@@ -77,5 +74,28 @@ public class Step_05_Twitter {
                 completed::countDown
         );
         completed.await();
+    }
+
+    @Test
+    public void prints_all_the_tweets_for_5_seconds() throws InterruptedException, ExecutionException {
+        CompletableFuture<Boolean> correct = new CompletableFuture<>();
+        LocalDateTime deadline = LocalDateTime.now().plusSeconds(5);
+        Observable<Tweet> tweets = asyncTwitterService.getTweets();
+
+        Subscription subscription = tweets.subscribe(
+                tweet -> {
+                    System.out.println(tweet);
+                    if (LocalDateTime.now().isAfter(deadline)) {
+                        System.out.println("After!");
+                        correct.completeExceptionally(new RuntimeException("After the deadline!"));
+                    }
+                },
+                err -> correct.completeExceptionally(new RuntimeException("After the deadline!")),
+                () -> correct.complete(true)
+        );
+
+        //TODO
+
+        assertTrue(correct.get());
     }
 }
