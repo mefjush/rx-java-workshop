@@ -4,9 +4,13 @@ import rx.Observable;
 
 public class AsyncTwitterService {
 
-    private final TwitterService twitterService = new TwitterService();
+    private final TwitterService twitterService;
 
-    Observable<Tweet> subscribe(String ... terms) {
+    public AsyncTwitterService(TwitterService twitterService) {
+        this.twitterService = twitterService;
+    }
+
+    Observable<Tweet> getTweets() {
         return Observable.error(new RuntimeException("Not implemented!"));
     }
 }

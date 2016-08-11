@@ -26,7 +26,7 @@ public class TwitterService {
     private BasicClient hosebirdClient;
     private LinkedBlockingQueue<String> msgQueue;
 
-    public void start(String ... terms) {
+    public TwitterService(String ... terms) {
         msgQueue = new LinkedBlockingQueue<>(100000);
 
         /** Declare the host you want to connect to, the endpoint, and authentication (basic auth or oauth) */
@@ -44,10 +44,11 @@ public class TwitterService {
                 .processor(new StringDelimitedProcessor(msgQueue));
 
         hosebirdClient = builder.build();
+    }
 
+    public void start() {
         System.out.println("Connecting...");
 
-        // Attempts to establish a connection.
         hosebirdClient.connect();
 
         System.out.println("Connected!");

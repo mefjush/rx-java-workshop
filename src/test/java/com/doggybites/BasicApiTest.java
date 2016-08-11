@@ -14,9 +14,9 @@ public class BasicApiTest {
     @Test
     public void testTwitterApi() throws InterruptedException, IOException {
         CountDownLatch countDownLatch = new CountDownLatch(1);
-        TwitterService twitterService = new TwitterService();
+        TwitterService twitterService = new TwitterService("adwords", "google");
 
-        twitterService.start("adwords", "google");
+        twitterService.start();
 
         twitterService.subscribe(tweet -> {
             System.out.println(tweet);
