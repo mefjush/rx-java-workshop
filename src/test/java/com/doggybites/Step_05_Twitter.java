@@ -30,10 +30,6 @@ public class Step_05_Twitter {
         asyncTwitterService.stop();
     }
 
-    //show how to unsubscribe + free up the underlying resource
-    //use rx.Subject
-    //show tweets with tags "adwords", "google" from hot places only
-
     @Test
     public void can_subscribe_to_tweets() {
         Observable<Tweet> tweets = asyncTwitterService.getTweets();
