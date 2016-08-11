@@ -13,17 +13,15 @@ public class AsyncTwitterService {
         this.twitterService = twitterService;
     }
 
-    Observable<Tweet> getTweets() {
-        publishSubject.doOnSubscribe(this::subscribe);
-        publishSubject.doOnUnsubscribe(this::unsubscribe);
+    public Observable<Tweet> getTweets() {
         return publishSubject.asObservable();
     }
 
-    private synchronized void subscribe() {
+    public void start() {
         //TODO
     }
 
-    private synchronized void unsubscribe() {
+    public void stop() {
         //TODO
     }
 }
