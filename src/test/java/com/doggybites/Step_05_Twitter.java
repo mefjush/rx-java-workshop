@@ -31,7 +31,7 @@ public class Step_05_Twitter {
         assertNotNull(first);
     }
 
-    @Test(timeout = 1000)
+    @Test(timeout = 3000)
     public void starts_twitter_connection_once() throws InterruptedException {
         CountDownLatch countDownLatch = new CountDownLatch(2);
         TwitterService twitterService = mock(TwitterService.class);
@@ -45,7 +45,7 @@ public class Step_05_Twitter {
         verify(twitterService, times(1)).start();
     }
 
-    @Test(timeout = 1000)
+    @Test(timeout = 3000)
     public void stops_twitter_connection_if_noone_subscribes() throws InterruptedException {
         CountDownLatch countDownLatch = new CountDownLatch(1);
         TwitterService twitterService = mock(TwitterService.class);
