@@ -30,7 +30,7 @@ public class Step_05_Twitter {
         asyncTwitterService.stop();
     }
 
-    @Test
+    @Test(timeout = 3000)
     public void can_subscribe_to_tweets() {
         Observable<Tweet> tweets = asyncTwitterService.getTweets();
 
