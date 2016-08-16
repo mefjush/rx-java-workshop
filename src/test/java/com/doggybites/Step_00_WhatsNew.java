@@ -2,6 +2,7 @@ package com.doggybites;
 
 import org.junit.Test;
 import rx.Observable;
+import rx.schedulers.Schedulers;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -9,6 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
@@ -37,17 +39,17 @@ public class Step_00_WhatsNew {
     public void stream_is_blocking() throws UnsupportedEncodingException {
         intervalsStream.limit(3).forEach(out::println);
 
-        assertThat(outputStream.toString("UTF-8"), is("???")); //TODO fix the assertion
+        assertThat(outputStream.toString("UTF-8"), is("1\n2\n3\n")); //TODO fix the assertion
     }
 
     @Test
     public void observable_is_async() throws UnsupportedEncodingException {
-        intervalsObservable.limit(3).subscribe(out::println);  //TODO fix by adding one method call in this line
+        intervalsObservable.limit(3).subscribeOn(Schedulers.io()).subscribe(out::println);  //TODO fix by adding one method call in this line
 
         assertThat(outputStream.toString("UTF-8"), is(""));
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void stream_can_be_used_once() throws UnsupportedEncodingException {
         IntStream limited = intervalsStream.limit(3);
         limited.forEach(out::println);
@@ -60,7 +62,7 @@ public class Step_00_WhatsNew {
     public void observable_can_be_reused() throws UnsupportedEncodingException {
         Observable<Integer> limited = intervalsObservable.limit(3);
         limited.subscribe(out::println);
-        //TODO
+        intervalsObservable.subscribe(out::println);
 
         assertThat(outputStream.toString("UTF-8"), is("1\n2\n3\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n"));
     }
@@ -72,6 +74,7 @@ public class Step_00_WhatsNew {
         callbackSleep(10, i -> {
             System.out.println(i);
             //TODO
+            countDownLatch.countDown();
         });
 
         countDownLatch.await();
@@ -80,18 +83,19 @@ public class Step_00_WhatsNew {
     @Test(timeout = 3000)
     public void combine_2_callbacks_together() throws InterruptedException {
         CountDownLatch countDownLatch = new CountDownLatch(1);
-        Integer sum = null;
+        AtomicInteger sum = new AtomicInteger();
 
         callbackSleep(2, i -> {
             callbackSleep(5, j -> {
                 //TODO
                 System.out.println(i);
                 countDownLatch.countDown();
+                sum.addAndGet(i + j);
             });
         });
 
         countDownLatch.await();
-        assertThat(sum, is(7));
+        assertThat(sum.get(), is(7));
     }
 
     @Test(timeout = 3000)
@@ -99,7 +103,7 @@ public class Step_00_WhatsNew {
         Observable<Integer> delayed2 = Observable.just(2).map(i -> sleep(i));
         Observable<Integer> delayed5 = Observable.just(5).map(i -> sleep(i));
 
-        Observable<Integer> sum = null; //TODO
+        Observable<Integer> sum = delayed2.flatMap(i -> delayed5.map(j -> i + j)); //TODO
 
         assertThat(sum.toBlocking().first(), is(7));
     }
