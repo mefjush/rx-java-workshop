@@ -33,6 +33,7 @@ public class Step_01_Introduction {
     @Test
     public void print_ints_out() throws UnsupportedEncodingException {
         //TODO
+        ints.subscribe(out::println);
 
         assertThat(outputStream.toString("UTF-8"), is("1\n3\n8\n"));
     }
@@ -40,6 +41,7 @@ public class Step_01_Introduction {
     @Test
     public void prints_ints_multiplied_by_2() throws UnsupportedEncodingException {
         //TODO
+        ints.map(i -> i * 2).subscribe(out::println);
 
         assertThat(outputStream.toString("UTF-8"), is("2\n6\n16\n"));
     }
@@ -47,6 +49,7 @@ public class Step_01_Introduction {
     @Test
     public void prints_the_last_int() throws UnsupportedEncodingException {
         //TODO
+        ints.last().subscribe(out::println);
 
         assertThat(outputStream.toString("UTF-8"), is("8\n"));
     }
@@ -54,6 +57,7 @@ public class Step_01_Introduction {
     @Test
     public void prints_only_odd_ints() throws UnsupportedEncodingException {
         //TODO
+        ints.filter(i -> i % 2 != 0).subscribe(out::println);
 
         assertThat(outputStream.toString("UTF-8"), is("1\n3\n"));
     }
@@ -61,6 +65,7 @@ public class Step_01_Introduction {
     @Test
     public void prints_sum_of_ints() throws UnsupportedEncodingException {
         //TODO
+        ints.reduce((i, j) -> i + j).subscribe(out::println);
 
         assertThat(outputStream.toString("UTF-8"), is("12\n"));
     }
@@ -72,7 +77,7 @@ public class Step_01_Introduction {
         Observable<Integer> observable123 = ints.map(i -> counter.incrementAndGet());
         observable123.subscribe(silentOut::println);
 
-        assertTrue(silentOutputStream.toString("UTF-8").equals("???")); //TODO
+        assertTrue(silentOutputStream.toString("UTF-8").equals("1\n2\n3\n")); //TODO
     }
 
     @Test
@@ -83,7 +88,7 @@ public class Step_01_Introduction {
 
         sum.subscribe(silentOut::println);
 
-        assertTrue(silentOutputStream.toString("UTF-8").equals("???\n")); //TODO
+        assertTrue(silentOutputStream.toString("UTF-8").equals("6\n")); //TODO
     }
 
     @Test
@@ -95,6 +100,6 @@ public class Step_01_Introduction {
         sum.subscribe(silentOut::println);
         sum.subscribe(s -> silentOut.println("Sum:" + s));
 
-        assertTrue(silentOutputStream.toString("UTF-8").equals("???\nSum:???\n")); //TODO
+        assertTrue(silentOutputStream.toString("UTF-8").equals("6\nSum:15\n")); //TODO
     }
 }
