@@ -32,11 +32,13 @@ public class Step_02_ErrorHandling {
     @Test(expected = RuntimeException.class)
     public void throws_when_printing_ints() {
         //TODO
+        ints.subscribe(out::println);
     }
 
     @Test
     public void works_fine_when_first_two_items_taken() throws UnsupportedEncodingException {
         //TODO
+        ints.take(2).subscribe(out::println);
 
         assertThat(outputStream.toString("UTF-8"), is("1\n3\n"));
     }
@@ -44,6 +46,7 @@ public class Step_02_ErrorHandling {
     @Test
     public void converts_error_ints_to_minusOne() throws UnsupportedEncodingException {
         //TODO
+        ints.onErrorResumeNext(Observable.just(-1)).subscribe(out::println);
 
         assertThat(outputStream.toString("UTF-8"), is("1\n3\n-1\n"));
     }
