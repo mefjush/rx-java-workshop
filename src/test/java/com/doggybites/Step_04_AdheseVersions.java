@@ -22,7 +22,7 @@ public class Step_04_AdheseVersions {
         Observable<String> nrc = asyncAdheseVersionService.getCustomerVersion("nrc");
         Observable<String> ipm = asyncAdheseVersionService.getCustomerVersion("ipm");
 
-        Observable<String> both = null; //TODO
+        Observable<String> both = nrc.concatWith(ipm);
 
         assertThat(both.count().toBlocking().first(), is(2));
     }
@@ -32,7 +32,7 @@ public class Step_04_AdheseVersions {
         Observable<String> nrc = asyncAdheseVersionService.getCustomerVersion("nrc");
         Observable<String> ipm = asyncAdheseVersionService.getCustomerVersion("ipm");
 
-        Observable<String> any = null; //TODO
+        Observable<String> any = nrc.mergeWith(ipm).first();
 
         assertThat(any.toBlocking().first(), is("2.0.22.11"));
     }

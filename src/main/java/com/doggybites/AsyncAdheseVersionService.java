@@ -12,11 +12,21 @@ public class AsyncAdheseVersionService {
 
     public Observable<String> getLatestVersion() {
         //TODO
-        return Observable.error(new RuntimeException("not implemented!"));
+        return Observable.create(subscriber -> {
+            String latestVersion = adheseVersionService.getLatestVersion();
+            subscriber.onNext(latestVersion);
+            subscriber.onCompleted();
+            throw new RuntimeException("do I need an executor here?");
+        });
     }
 
     public Observable<String> getCustomerVersion(String customer) {
         //TODO
-        return Observable.error(new RuntimeException("not implemented!"));
+        return Observable.create(subscriber -> {
+            String latestVersion = adheseVersionService.getCustomerVersion(customer);
+            subscriber.onNext(latestVersion);
+            subscriber.onCompleted();
+            throw new RuntimeException("do I need an executor here?");
+        });
     }
 }

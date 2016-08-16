@@ -9,6 +9,7 @@ import rx.Subscription;
 import java.time.LocalDateTime;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -45,7 +46,13 @@ public class Step_05_Twitter {
         CountDownLatch completed = new CountDownLatch(1);
         Observable<Tweet> tweets = asyncTwitterService.getTweets();
 
-        Observable<ExtendedTweet> hotTweets = null; //TODO
+        Observable<ExtendedTweet> hotTweets = tweets
+                .filter(tweet -> tweet.getUserLocation().isPresent())
+                .flatMap(tweet -> {
+                    String location = tweet.getUserLocation().get();
+                    return asyncWeatherService.getTemp(location).map(temp -> new ExtendedTweet(tweet, temp));
+                })
+                .filter(tweet -> tweet.temp > 25);
 
         hotTweets.subscribe(
                 tweet -> {
@@ -79,6 +86,7 @@ public class Step_05_Twitter {
         );
 
         //TODO
+        Observable.timer(5, TimeUnit.SECONDS).subscribe(timeout -> subscription.unsubscribe());
 
         Thread.sleep(10000);
         assertThat(deadlineViolations.get(), is(0));

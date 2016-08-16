@@ -17,11 +17,17 @@ public class AsyncTwitterService {
         return publishSubject.asObservable();
     }
 
-    public void start() {
-        //TODO
+    public synchronized void start() {
+        twitterService.start();
+        twitterService.subscribe(this::onNext);
     }
 
-    public void stop() {
-        //TODO
+    private synchronized void onNext(Tweet tweet) {
+        publishSubject.onNext(tweet);
+    }
+
+    public synchronized void stop() {
+        publishSubject.onCompleted();
+        twitterService.stop();
     }
 }
