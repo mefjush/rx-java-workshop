@@ -52,7 +52,8 @@ public class Step_05_Twitter {
                     String location = tweet.getUserLocation().get();
                     return asyncWeatherService.getTemp(location).map(temp -> new ExtendedTweet(tweet, temp));
                 })
-                .filter(tweet -> tweet.temp > 25);
+                .filter(tweet -> tweet.temp > 25)
+                .onErrorResumeNext(Observable.empty());
 
         hotTweets.subscribe(
                 tweet -> {

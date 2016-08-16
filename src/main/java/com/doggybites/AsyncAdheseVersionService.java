@@ -16,7 +16,6 @@ public class AsyncAdheseVersionService {
             String latestVersion = adheseVersionService.getLatestVersion();
             subscriber.onNext(latestVersion);
             subscriber.onCompleted();
-            throw new RuntimeException("do I need an executor here?");
         });
     }
 
@@ -26,7 +25,6 @@ public class AsyncAdheseVersionService {
             String latestVersion = adheseVersionService.getCustomerVersion(customer);
             subscriber.onNext(latestVersion);
             subscriber.onCompleted();
-            throw new RuntimeException("do I need an executor here?");
         });
     }
 }

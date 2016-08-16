@@ -34,6 +34,6 @@ public class Step_04_AdheseVersions {
 
         Observable<String> any = nrc.mergeWith(ipm).first();
 
-        assertThat(any.toBlocking().first(), is("2.0.22.11"));
+        assertThat(any.toBlocking().first(), is("2.0.22.7"));
     }
 }
